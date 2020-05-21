@@ -1,0 +1,38 @@
+package theory07.task31;
+
+import java.util.stream.LongStream;
+
+/**
+ * Create a parallel LongStream for filtering prime numbers in the given range (inclusively).
+ * <p>
+ * The static method NumberUtils.isPrime(...some long number...) will be available for you during testing.
+ * It returns true if the passed value is prime and false otherwise.
+ * <p>
+ * Be carefully with rangeClose(d), iterate and limit methods!
+ * <p>
+ * Important. You need return a prepared parallel stream from the template.
+ * After calling count() it should return the count of prime numbers in the given range.
+ * Pay attention to the method template. Do not change it.
+ * <p>
+ * PS: it's not a very efficient approach for generating prime numbers, it's just an example of parallel streams.
+ */
+
+public class Solution {
+
+    public static LongStream createPrimesFilteringStream(long rangeBegin, long rangeEnd) {
+        return LongStream.rangeClosed(rangeBegin, rangeEnd)
+                .parallel()
+                .filter(NumberUtils::isPrime);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(createPrimesFilteringStream(1, 10).count());
+    }
+    static class NumberUtils {
+        public static boolean isPrime(final long number) {
+            return LongStream
+                    .range(2, (number >> 1) + 1)
+                    .noneMatch(i -> number % i == 0);
+        }
+    }
+}
