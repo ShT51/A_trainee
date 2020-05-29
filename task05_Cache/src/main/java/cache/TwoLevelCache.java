@@ -120,7 +120,7 @@ public class TwoLevelCache<K, V extends Serializable> implements NLevelCache<K, 
     public void recacheHdd() {
         int boundFrequency = getCacheBoundFrequency(l2Cache);
 
-        Set<K> hddKeys = new HashSet<>(l2Cache.getCacheStore().keySet());
+        Set<K> hddKeys = l2Cache.getFrequencyKeySet();
 
         for (K key : hddKeys) {
             if (l2Cache.getFrequencyOfCallingObject(key) <= boundFrequency) {
