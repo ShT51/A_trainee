@@ -1,12 +1,15 @@
 package dao;
 
 import model.Employee;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EmployeeDaoImplTest {
@@ -26,8 +29,8 @@ class EmployeeDaoImplTest {
     void getEmployeeById_New_Employee() throws SQLException {
         Employee actual = employeeDao.getEmployeeById(999);
         assertEquals(newEmployee.getId(), actual.getId());
-        assertEquals(newEmployee.getfName(), actual.getfName());
-        assertEquals(newEmployee.getlName(), actual.getlName());
+        assertEquals(newEmployee.getFirstName(), actual.getFirstName());
+        assertEquals(newEmployee.getLastName(), actual.getLastName());
         assertEquals(newEmployee.getEmail(), actual.getEmail());
         assertEquals(newEmployee.getDepartment(), actual.getDepartment());
         assertEquals(newEmployee.getSalary(), actual.getSalary());
@@ -44,8 +47,8 @@ class EmployeeDaoImplTest {
     void getEmployeeById_Updated_Employee() throws SQLException {
         Employee actual = employeeDao.getEmployeeById(999);
         assertEquals(updatedEmployee.getId(), actual.getId());
-        assertEquals(updatedEmployee.getfName(), actual.getfName());
-        assertEquals(updatedEmployee.getlName(), actual.getlName());
+        assertEquals(updatedEmployee.getFirstName(), actual.getFirstName());
+        assertEquals(updatedEmployee.getLastName(), actual.getLastName());
         assertEquals(updatedEmployee.getEmail(), actual.getEmail());
         assertEquals(updatedEmployee.getDepartment(), actual.getDepartment());
         assertEquals(updatedEmployee.getSalary(), actual.getSalary());
@@ -56,9 +59,21 @@ class EmployeeDaoImplTest {
     void getAllEmployees() throws SQLException {
        assertEquals(13, employeeDao.getAllEmployee().size());
     }
-    
     @Test
     @Order(6)
+    void getEmployeeByEmail() throws SQLException {
+        Employee actual = employeeDao.getEmployeeByEmail("jon@missing.com");
+        assertEquals(updatedEmployee.getId(), actual.getId());
+        assertEquals(updatedEmployee.getFirstName(), actual.getFirstName());
+        assertEquals(updatedEmployee.getLastName(), actual.getLastName());
+        assertEquals(updatedEmployee.getEmail(), actual.getEmail());
+        assertEquals(updatedEmployee.getDepartment(), actual.getDepartment());
+        assertEquals(updatedEmployee.getSalary(), actual.getSalary());
+    }
+
+
+    @Test
+    @Order(7)
     void deleteEmployeeById() throws SQLException {
         assertTrue(employeeDao.deleteEmployeeById(999));
     }

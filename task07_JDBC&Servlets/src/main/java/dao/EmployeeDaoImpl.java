@@ -13,6 +13,7 @@ public class EmployeeDaoImpl implements EmployeeDAO {
     private PreparedStatement preparedStatement;
 
     private static final String SELECT_EMPLOYEE_BY_ID = "SELECT * FROM employees WHERE id = ?;";
+    private static final String SELECT_EMPLOYEE_BY_EMAIL = "SELECT * FROM employees WHERE email = ?;";
     private static final String SELECT_ALL_EMPLOYEE = "SELECT * FROM employees;";
     private static final String DELETE_EMPLOYEE = "DELETE FROM employees WHERE id = ?;";
     private static final String UPDATE_EMPLOYEE = "UPDATE employees SET first_name = ?, last_name = ?, " +
@@ -42,6 +43,35 @@ public class EmployeeDaoImpl implements EmployeeDAO {
                 String department = rs.getString("department");
                 long salary = rs.getLong("salary");
                 employee = new Employee(emp_id, fName, lName, email, department, salary);
+            }
+            return employee;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(connection, preparedStatement, rs);
+        }
+        return employee;
+    }
+
+    @Override
+    public Employee getEmployeeByEmail(String email) throws SQLException {
+        Employee employee = null;
+        ResultSet rs = null;
+
+        try {
+            connection = DataSource.getConnection();
+            preparedStatement = connection.prepareStatement(SELECT_EMPLOYEE_BY_EMAIL);
+            preparedStatement.setString(1, email);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String fName = rs.getString("first_name");
+                String lName = rs.getString("last_name");
+                String department = rs.getString("department");
+                long salary = rs.getLong("salary");
+                employee = new Employee(id, fName, lName, email, department, salary);
             }
             return employee;
 
@@ -90,8 +120,8 @@ public class EmployeeDaoImpl implements EmployeeDAO {
             connection = DataSource.getConnection();
             preparedStatement = connection.prepareStatement(ADD_EMPLOYEE);
             preparedStatement.setInt(1, emp.getId());
-            preparedStatement.setString(2, emp.getfName());
-            preparedStatement.setString(3, emp.getlName());
+            preparedStatement.setString(2, emp.getFirstName());
+            preparedStatement.setString(3, emp.getLastName());
             preparedStatement.setString(4, emp.getEmail());
             preparedStatement.setString(5, emp.getDepartment());
             preparedStatement.setLong(6, emp.getSalary());
@@ -113,8 +143,8 @@ public class EmployeeDaoImpl implements EmployeeDAO {
         try {
             connection = DataSource.getConnection();
             preparedStatement = connection.prepareStatement(UPDATE_EMPLOYEE);
-            preparedStatement.setString(1, emp.getfName());
-            preparedStatement.setString(2, emp.getlName());
+            preparedStatement.setString(1, emp.getFirstName());
+            preparedStatement.setString(2, emp.getLastName());
             preparedStatement.setString(3, emp.getEmail());
             preparedStatement.setString(4, emp.getDepartment());
             preparedStatement.setLong(5, emp.getSalary());
